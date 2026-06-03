@@ -169,11 +169,40 @@ div[data-testid="stButton"] > button:hover {
     padding: 1rem;
 }
 
-/* ── Copy link button ── */
-.copy-row {
+/* ── Passage link ── */
+.passage-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--moon);
+    text-decoration: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1.25;
+    transition: color 0.15s;
+}
+.passage-link:hover { color: var(--accent-lt); }
+.passage-link .ext-icon {
+    font-size: 0.9rem;
+    opacity: 0.5;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+}
+
+/* ── Bottom row: copy + ESV badge ── */
+.bottom-row {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
     margin-top: 1.4rem;
+}
+.esv-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-transform: uppercase;
 }
 .copy-btn {
     background: var(--surface2);
@@ -256,6 +285,12 @@ except Exception:
     today = date.today()
     today_reading = pd.DataFrame()
 
+# ── Bible Gateway URL builder ─────────────────────────────────────────────────
+def bible_gateway_url(passage: str) -> str:
+    import urllib.parse
+    query = urllib.parse.quote(passage.strip())
+    return f"https://www.biblegateway.com/passage/?search={query}&version=ESV"
+
 # ── Hero ───────────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="hero">
@@ -281,15 +316,21 @@ if show:
     elif not today_reading.empty:
         passage1 = today_reading.iloc[0]["Passage 1"]
         passage2 = today_reading.iloc[0]["Passage 2"]
-        page_url = "?date=" + today.strftime("%Y-%m-%d")
+        url1 = bible_gateway_url(passage1)
+        url2 = bible_gateway_url(passage2)
         st.markdown(f"""
         <div class="reading-card">
             <div class="reading-label">First Reading</div>
-            <div class="reading-passage">{passage1}</div>
+            <a class="passage-link" href="{url1}" target="_blank" rel="noopener">
+                {passage1} <span class="ext-icon">↗</span>
+            </a>
             <hr class="reading-divider">
             <div class="reading-label">Second Reading</div>
-            <div class="reading-passage">{passage2}</div>
-            <div class="copy-row">
+            <a class="passage-link" href="{url2}" target="_blank" rel="noopener">
+                {passage2} <span class="ext-icon">↗</span>
+            </a>
+            <div class="bottom-row">
+                <span class="esv-badge">ESV · Bible Gateway</span>
                 <button class="copy-btn" onclick="navigator.clipboard.writeText(window.location.href).then(()=>{{this.innerText='✓ Copied!';setTimeout(()=>{{this.innerHTML='🔗 Copy Link'}},1800)}})">
                     🔗 Copy Link
                 </button>
