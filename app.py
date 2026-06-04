@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import urllib.parse
-from datetime import date
+from datetime import date, datetime
+import pytz
 
 st.set_page_config(
     page_title="Daily Bible Reading",
@@ -309,12 +310,14 @@ def load_bible_plan():
 
 try:
     bible = load_bible_plan()
-    today = date.today()
+    pst = pytz.timezone("America/Los_Angeles")
+    today = datetime.now(pst).date()
     today_reading = bible[bible["Date"] == today]
     data_loaded = True
 except Exception:
     data_loaded = False
-    today = date.today()
+    pst = pytz.timezone("America/Los_Angeles")
+    today = datetime.now(pst).date()
     today_reading = pd.DataFrame()
 
 # ── Hero ──────────────────────────────────────────────────────────────────────
