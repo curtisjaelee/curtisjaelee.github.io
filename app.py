@@ -9,7 +9,7 @@ st.set_page_config(
     page_icon="🌙",
     layout="centered",
 )
-
+ 
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Manrope:wght@400;500;600;700&display=swap');
@@ -311,7 +311,7 @@ def load_bible_plan():
 try:
     bible = load_bible_plan()
     pst = pytz.timezone("America/Los_Angeles")
-    today = datetime.now(pst).date()
+    today = datetime.now(pst).date() # for timezone consistency with the reading plan dates
     today_reading = bible[bible["Date"] == today]
     data_loaded = True
 except Exception:
